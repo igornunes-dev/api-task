@@ -1,89 +1,164 @@
-# Task Manager Backend
+# Task Manager - Spring Boot Backend
 
-This is the backend REST API for the **Task Manager** application, built with **Spring Boot**, **Java 21**, and secured using **Spring Security** with **JWT** authentication. It manages users, tasks, and categories, exposing RESTful endpoints consumed by the Angular frontend.
+[![Java](https://img.shields.io/badge/Java-21-blue)](https://openjdk.org/projects/jdk/21/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0-brightgreen)](https://spring.io/projects/spring-boot)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+## Overview
+
+This is the backend of the **Task Manager** application, a secure and scalable RESTful API built with **Spring Boot** and **Java 21**. It manages authentication, task operations, and category organization with robust access control using **JWT**.
+
+It integrates seamlessly with the Angular frontend and follows best practices for modern backend development, including layered architecture, database versioning, and containerized deployment.
+
+---
+
+## Table of Contents
+
+* [Features](#features)
+* [Technologies](#technologies)
+* [Architecture](#architecture)
+* [Getting Started](#getting-started)
+
+  * [Installation](#installation)
+  * [Running with Docker](#running-with-docker)
+* [Usage](#usage)
+* [License](#license)
+* [Contact](#contact)
 
 ---
 
 ## Features
 
-- RESTful API with CRUD operations for users, tasks, and categories  
-- Secure authentication and authorization using JWT tokens  
-- Password hashing and role-based access control  
-- Input validation with Spring Validation  
-- Object mapping with MapStruct for DTOs and entities  
-- Database migrations managed by Flyway  
-- Cross-Origin Resource Sharing (CORS) configured for frontend integration  
-- Comprehensive unit and integration tests  
+* **JWT Authentication & Spring Security**
+  Stateless authentication with role-based access and secure route protection.
+
+* **Task and Category Management**
+  Full CRUD support with filtering, pagination, and user ownership enforcement.
+
+* **DTO Mapping with MapStruct**
+  Clean separation of domain models and exposed data structures.
+
+* **Pagination Support**
+  Efficient handling of large task datasets using pageable API endpoints for listing and filtering.
+
+* **Database Migrations with Flyway**
+  Version-controlled schema updates for consistent environments.
+
+* **CORS Configuration**
+  Allows integration with external frontend domains (e.g., Angular app).
 
 ---
 
-## Technology Stack
+## Technologies
 
-- **Java 21**  
-- **Spring Boot 3+**  
-- **Spring Security** with JWT  
-- **Spring Data JPA** with PostgreSQL  
-- **MapStruct** for DTO mapping  
-- **Flyway** for database migrations  
-- **Docker & Docker Compose** for containerized deployment  
-- **Lombok** for boilerplate code reduction  
+| Layer            | Technology                  |
+| ---------------- | --------------------------- |
+| Language         | Java 21                     |
+| Framework        | Spring Boot 3+              |
+| Security         | Spring Security + JWT       |
+| ORM              | Spring Data JPA             |
+| Mapping          | MapStruct                   |
+| Database         | PostgreSQL                  |
+| Migrations       | Flyway                      |
+| Containerization | Docker, Docker Compose      |
+| Build Tool       | Maven                       |
 
-## Running with Docker
+---
 
-The backend API and PostgreSQL database can be easily deployed using Docker and Docker Compose to create isolated, reproducible environments.
+## Architecture
+
+The backend follows a clean, layered architecture:
+
+```
+src/
+└── main/
+    └── java/
+        └── com.example.apitask/
+            ├── config/            # Global application configuration (CORS, Swagger, etc.)
+            ├── controllers/       # REST controllers (define HTTP endpoints)
+            ├── dtos/              # Data Transfer Objects used for requests/responses
+            ├── enums/             # Enumerations for domain constraints and constants
+            ├── exceptions/        # Custom exception classes and handlers
+            ├── helpers/           # Utility classes and common helpers
+            ├── infra.security/    # Spring Security configuration and JWT authentication
+            ├── mappers/           # MapStruct mappers for converting between entities and DTOs
+            ├── models/            # JPA entities (domain models)
+            ├── repositories/      # Spring Data JPA repositories (data access layer)
+            ├── seed/              # Initial data loading and seeding logic
+            └── services/          # Business logic and service layer
+
+```
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
-* Ensure **Docker** and **Docker Compose** are installed and running on your machine.
-* Verify installation by running:
+Make sure you have the following installed:
+
+* [Java 21+](https://adoptium.net/)
+* [Maven](https://maven.apache.org/)
+* [Docker & Docker Compose](https://docs.docker.com/compose/)
+
+---
+
+### Installation
+
+1. **Clone the repository**
 
 ```bash
-docker --version
-docker-compose --version
+git clone https://github.com/yourusername/task-manager-backend.git
+cd task-manager-backend
 ```
 
-### Starting the Application
+2. **Build the project**
 
-1. Navigate to the project root directory containing the `docker-compose.yml` file.
+```bash
+./mvnw clean install
+```
 
-2. Build and start the containers using:
+---
+
+### Running with Docker
+
+You can run the backend and database using Docker Compose:
 
 ```bash
 docker-compose up --build
 ```
 
-This command will:
+* The backend will be available at `http://localhost:8080`
+* PostgreSQL will run in a separate container with persistent volume.
 
-* Build the backend Docker image from your source code.
-* Pull and run the official PostgreSQL Docker image.
-* Set up networking between containers and configure environment variables.
-
-3. Once running, the backend API will be accessible at:
-
-```
-http://localhost:8080
-```
-
-### Stopping the Application
-
-To stop and remove the containers, run:
+To stop the containers:
 
 ```bash
 docker-compose down
 ```
 
+> Ensure your `application.properties` (or `application.yml`) is configured for containerized PostgreSQL.
+
 ---
 
-## CORS Configuration
+## Usage
 
-The backend allows requests from the frontend domain by configuring CORS in the security config, enabling seamless API integration.
+* Register a new user and authenticate to receive a JWT token.
+* Use the token to access secured endpoints (e.g., create, update, and delete tasks).
+* Each task belongs to a user and can be organized into categories.
+* Supports pagination, filtering, and sorting on task lists.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ---
 
 ## Contact
 
-For questions or contributions, contact: [igornunesle@gmail.com](mailto:igornunesle@gmail.com)
+**Igor Nunes**
+📧 [igornunesle@gmail.com](mailto:igornunesle@gmail.com)
 
 ---
-
-Feel free to ask if you want me to generate full example configs, security setup, or more!
