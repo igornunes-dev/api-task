@@ -23,6 +23,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Users implements UserDetails {
 
+    private final static long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

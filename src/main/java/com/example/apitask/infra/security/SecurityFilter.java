@@ -1,6 +1,7 @@
 package com.example.apitask.infra.security;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.apitask.models.Users;
 import com.example.apitask.repositories.UsersRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,7 +34,8 @@ public class SecurityFilter extends OncePerRequestFilter {
     UsersRepository userRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         String path = request.getRequestURI();
         if (path.startsWith("/auth")) {
@@ -41,24 +43,28 @@ public class SecurityFilter extends OncePerRequestFilter {
             return;
         }
 
+        try {
+            var token = this.recoverToken(request);
+            if (token != null) {
+                DecodedJWT jwt = tokenService.decodeToken(token);
+                String username = jwt.getSubject();
+                List<String> roles = jwt.getClaim("authorities").asList(String.class);
 
-        var token = this.recoverToken(request);
-        if (token != null) {
-            DecodedJWT jwt = tokenService.decodeToken(token);
-            String username = jwt.getSubject();
-            List<String> roles = jwt.getClaim("authorities").asList(String.class);
+                List<GrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-            List<GrantedAuthority> authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-
-            Optional<UserDetails> userOpt = userRepository.findByEmail(username);
-            if (userOpt.isPresent()) {
-                UserDetails user = userOpt.get();
-                Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                Optional<UserDetails> userOpt = userRepository.findByEmail(username);
+                if (userOpt.isPresent()) {
+                    UserDetails user = userOpt.get();
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
         }
+
         filterChain.doFilter(request, response);
     }
 

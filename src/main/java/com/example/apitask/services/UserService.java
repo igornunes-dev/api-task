@@ -2,6 +2,7 @@ package com.example.apitask.services;
 
 import com.example.apitask.dtos.users.UsersRequestDTO;
 import com.example.apitask.dtos.users.UsersResponseDTO;
+import com.example.apitask.email.EmailPublisher;
 import com.example.apitask.enums.UsersRole;
 import com.example.apitask.exceptions.EmailAlreadyExistsException;
 import com.example.apitask.exceptions.ResourceNotFoundException;
@@ -30,12 +31,14 @@ public class UserService implements UserDetailsService {
     private final UsersMapper usersMapper;
     private final HashPassword hashPassword;
     private final TokenService tokenService;
+    private final EmailPublisher emailPublisher;
 
-    public UserService(UsersRepository usersRepository, UsersMapper usersMapper, HashPassword hashPassword, TokenService tokenService) {
+    public UserService(UsersRepository usersRepository, UsersMapper usersMapper, HashPassword hashPassword, TokenService tokenService, EmailPublisher emailPublisher) {
         this.usersRepository = usersRepository;
         this.usersMapper = usersMapper;
         this.hashPassword = hashPassword;
         this.tokenService = tokenService;
+        this.emailPublisher = emailPublisher;
     }
 
 
@@ -48,6 +51,7 @@ public class UserService implements UserDetailsService {
         users.setPassword(hashPassword.hashEncode(usersRequestDTO.password()));
         users.setRole(UsersRole.USER);
         usersRepository.save(users);
+        emailPublisher.sendWelcomeEmail(users);
         return usersMapper.toDTO(users);
     }
 

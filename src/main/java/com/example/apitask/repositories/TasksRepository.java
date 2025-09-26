@@ -19,9 +19,6 @@ import java.util.UUID;
 
 @Repository
 public interface TasksRepository extends JpaRepository<Tasks, UUID> {
-    @EntityGraph(attributePaths = {"categories"})
-    Page<Tasks> findByDateExpirationAndUsersId(LocalDate date, UUID userId, Pageable pageable);
-
     @Query("select t from Tasks t where t.users.id = :userId and t.dateExpiration <= :date and t.completed = false order by t.dateExpiration desc")
     Page<Tasks> findTasksDueUpToDate(@Param("userId") UUID userId, @Param("date") LocalDate date, Pageable pageable);
 
