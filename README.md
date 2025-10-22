@@ -47,6 +47,12 @@ It integrates seamlessly with the Angular frontend and follows best practices fo
 * **CORS Configuration**
   Allows integration with external frontend domains (e.g., Angular app).
 
+* **Gmail & RabbitMQ Integration**
+  Automated email notifications for new user registrations and upcoming tasks.
+  Uses Gmail API for sending emails.
+  RabbitMQ acts as a messaging broker to queue and process email tasks asynchronously.
+  Ensures reliable delivery and decouples email sending from main task processing.
+
 ---
 
 ## Technologies
@@ -62,6 +68,7 @@ It integrates seamlessly with the Angular frontend and follows best practices fo
 | Migrations       | Flyway                      |
 | Containerization | Docker, Docker Compose      |
 | Build Tool       | Maven                       |
+| Email            | Gmail API
 
 ---
 
