@@ -53,6 +53,9 @@ It integrates seamlessly with the Angular frontend and follows best practices fo
   RabbitMQ acts as a messaging broker to queue and process email tasks asynchronously.
   Ensures reliable delivery and decouples email sending from main task processing.
 
+* **Unit & Integration Testing**
+  Implemented tests with JUnit and Mockito to ensure code reliability and coverage.
+
 ---
 
 ## Technologies
@@ -68,8 +71,8 @@ It integrates seamlessly with the Angular frontend and follows best practices fo
 | Migrations       | Flyway                      |
 | Containerization | Docker, Docker Compose      |
 | Build Tool       | Maven                       |
-| Email            | Gmail API
-
+| Email            | Gmail API                   |
+| Testing          | JUnit, Mockito              |
 ---
 
 ## Architecture
